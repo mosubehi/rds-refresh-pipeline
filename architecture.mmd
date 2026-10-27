@@ -1,0 +1,23 @@
+
+flowchart TD
+    A["Jenkins Pipeline"] --> B["Preflight Checks"]
+    B --> C["Create Source RDS Snapshot"]
+    C --> D["Share Snapshot with Target Account"]
+    D --> E["Copy Snapshot into Target Account"]
+    E --> F["Restore Lower-Environment RDS"]
+    F --> G["Run Post-Restore Script"]
+    G --> H["Validate Lower-Environment Configuration"]
+    H --> I["Cleanup Approved Temporary Resources"]
+    I --> J["Notify Success"]
+
+    C -. "Failure" .-> K["Error Handling"]
+    D -. "Failure" .-> K
+    E -. "Failure" .-> K
+    F -. "Failure" .-> K
+    G -. "Failure" .-> K
+    K --> L["Mark Build Failed and Report Error"]
+
+    M["Jenkins Credentials"] -. "Temporary AWS Credentials" .-> C
+    M -. "Target Account Credentials" .-> E
+    N["AWS KMS Key Policy and Permissions"] -. "If Snapshot Is Encrypted" .-> D
+    N -. "Target KMS Key" .-> E

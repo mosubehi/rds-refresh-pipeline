@@ -1,0 +1,9 @@
+.env
+.env.*
+*.pem
+*.key
+credentials
+credentials.*
+secrets/
+.DS_Store
+Jenkinsfile.save
